@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             'name' => 'Demo User',
             'email' => 'demo@example.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Password1!'),
         ]);
 
         // Create Test User
@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Password1!'),
         ]);
 
         $this->command->info('✓ Created users: demo@example.com, test@example.com');
-        $this->command->info('  Password: password');
+        $this->command->info('  Password: Password1!');
     }
 }
