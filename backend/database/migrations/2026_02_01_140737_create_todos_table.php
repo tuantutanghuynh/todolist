@@ -22,9 +22,10 @@ return new class extends Migration
                     ->onDelete('set null'); //when category is deleted, set to null, todos are still existent
             $table->string('title', 255);
             $table->text('description')->nullable();
-            $table->unsignedTinyInteger('priority')->default(2); //0: low, 1: medium, 2: high
+            $table->unsignedTinyInteger('priority')->default(2); //1: low, 2: medium, 3: high
             $table->date('due_date')->nullable();
             $table->boolean('is_completed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
