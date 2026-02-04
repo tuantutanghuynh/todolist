@@ -29,12 +29,13 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        //create token
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Login user after registration (SPA session-based)
+        Auth::login($user);
+        $request->session()->regenerate();
+
         return response()->json([
             'message' => 'User registered successfully',
             'user' => $user,
-            'token' => $token,
         ], 201);
     }
 
@@ -47,28 +48,31 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        //authenticate user
-        if (!Auth::attempt($validated)) {
+        // Authenticate user with session (SPA authentication)
+        if (!Auth::attempt($validated, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        $user = User::where('email', $validated['email'])->first();
 
-        //delete existing tokens
-        $token = $user->createToken('auth-token')->plainTextToken;
+        // Regenerate session to prevent session fixation attacks
+        $request->session()->regenerate();
+
         return response()->json([
             'message' => 'User logged in successfully',
-            'user' => $user,
-            'token' => $token,
+            'user' => Auth::user(),
         ]);
-        }
+    }
+
     //Logout user
     //POST /api/logout
     public function logout(Request $request): JsonResponse
     {
-        //delete current token
-        $request->user()->currentAccessToken()->delete();
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return response()->json([
             'message' => 'User logged out successfully',
         ]);
@@ -81,5 +85,5 @@ class AuthController extends Controller
         return response()->json([
             'user' => $request->user(),
         ]);
-        }
+    }
 }
