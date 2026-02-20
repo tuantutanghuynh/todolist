@@ -3,7 +3,9 @@
     "allow": [
       "Bash(git status:*)",
       "Bash(tree:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)"
     ]
   }
 }
