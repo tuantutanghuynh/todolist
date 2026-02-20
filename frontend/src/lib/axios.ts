@@ -27,10 +27,8 @@ apiClient.interceptors.response.use(
 
     const { status } = error.response
 
-    if (status === 401) {
-      // Phiên đăng nhập hết hạn hoặc chưa xác thực → về trang login
-      window.location.href = '/login'
-    }
+    // 401: Để cho AuthContext và Router xử lý redirect
+    // Không dùng window.location.href vì sẽ gây reload loop
 
     if (status === 419) {
       // CSRF token mismatch → thường xảy ra khi session hết hạn
