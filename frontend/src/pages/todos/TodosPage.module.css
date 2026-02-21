@@ -1,0 +1,277 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TodosPage — Mystical Theme Dashboard
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.page {
+    padding: var(--space-6);
+    min-height: 100%;
+}
+
+/* ─── Welcome Banner ─────────────────────────────────────────────────────── */
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, var(--color-accent) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.bannerContent {
+    position: relative;
+    z-index: 1;
+}
+
+.bannerBadge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: var(--space-3);
+}
+
+.bannerTitle {
+    font-size: var(--font-3xl);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: var(--space-1);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bannerSubtitle {
+    font-size: var(--font-base);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--space-4);
+}
+
+.progressWrap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+}
+
+.progressLabel,
+.progressValue {
+    font-size: var(--font-sm);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.progressBar {
+    width: 280px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: #fff;
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+.bannerAvatar {
+    position: relative;
+    z-index: 1;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 4px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ─── Tasks Section ─────────────────────────────────────────────────────── */
+.tasksSection {
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-glow-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+}
+
+.tasksHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.tasksTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.tasksTitleIcon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-glow);
+}
+
+.tasksHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.addBtn {
+    padding: var(--space-2) var(--space-4);
+    white-space: nowrap;
+}
+
+.addBtnIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.filterTabs {
+    display: flex;
+    gap: var(--space-1);
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--space-1);
+    border-radius: var(--radius-md);
+}
+
+.filterTab {
+    padding: var(--space-2) var(--space-4);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.filterTab:hover {
+    color: var(--color-text);
+}
+
+.filterTabActive {
+    background: var(--color-glow);
+    color: var(--color-bg-deep);
+}
+
+/* ─── Tasks List ─────────────────────────────────────────────────────────── */
+.tasksList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+/* ─── Loading State ─────────────────────────────────────────────────────── */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-10);
+    color: var(--color-text-muted);
+    gap: var(--space-3);
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-glow-border);
+    border-top-color: var(--color-glow);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Empty State ─────────────────────────────────────────────────────────── */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-10);
+    color: var(--color-text-muted);
+    gap: var(--space-2);
+}
+
+.emptyIcon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-glow);
+    opacity: 0.5;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .page {
+        padding: var(--space-4);
+    }
+
+    .banner {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-4);
+    }
+
+    .bannerAvatar {
+        order: -1;
+        width: 80px;
+        height: 80px;
+        font-size: var(--font-xl);
+    }
+
+    .progressBar {
+        width: 100%;
+    }
+
+    .tasksHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tasksHeaderRight {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterTabs {
+        justify-content: center;
+    }
+
+    .addBtn {
+        width: 100%;
+        justify-content: center;
+    }
+}
