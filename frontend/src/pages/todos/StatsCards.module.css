@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   StatsCards — Mystical Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-bg-dark), var(--color-bg-mid));
+    border: 1px solid var(--color-glow-border);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.iconWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-glow);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.label {
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.value {
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1;
+}
+
+/* ─── Card Variants ─────────────────────────────────────────────────────── */
+.cardTotal .iconWrap {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.cardTotal .icon {
+    color: var(--color-info);
+}
+
+.cardPending .iconWrap {
+    background: rgba(245, 158, 11, 0.15);
+}
+
+.cardPending .icon {
+    color: var(--color-warning);
+}
+
+.cardCompleted .iconWrap {
+    background: rgba(34, 197, 94, 0.15);
+}
+
+.cardCompleted .icon {
+    color: var(--color-success);
+}
+
+.cardOverdue .iconWrap {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.cardOverdue .icon {
+    color: var(--color-danger);
+}
