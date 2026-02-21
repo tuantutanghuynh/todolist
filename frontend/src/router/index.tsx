@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import GuestRoute from './GuestRoute'
 import ProtectedRoute from './ProtectedRoute'
+import MainLayout from '@/components/layout/MainLayout'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import TodosPage from '@/pages/todos/TodosPage'
@@ -19,7 +20,12 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
-      { path: '/', element: <TodosPage /> },
+      {
+        element: <MainLayout />,
+        children: [
+          { path: '/', element: <TodosPage /> },
+        ],
+      },
     ],
   },
 
