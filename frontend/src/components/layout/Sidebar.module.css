@@ -99,6 +99,61 @@
 
 /* ─── Category Items ──────────────────────────────────────────────────────── */
 
+.categoryItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.categoryItem .navItem {
+  flex: 1;
+  padding-right: var(--space-2);
+}
+
+.categoryActions {
+  display: none;
+  position: absolute;
+  right: 0;
+  gap: 2px;
+  background: var(--color-bg-dark);
+  padding: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.categoryItem:hover .categoryActions {
+  display: flex;
+}
+
+.categoryActionBtn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-dim);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.categoryActionBtn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.categoryActionBtn:hover {
+  background: var(--color-glow-soft);
+  color: var(--color-glow);
+}
+
+.categoryActionBtnDanger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+}
+
 .categoryDot {
   width: 10px;
   height: 10px;
