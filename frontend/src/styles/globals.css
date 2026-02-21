@@ -3,31 +3,41 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ─── Color Palette ─────────────────────────────────────────────────────── */
-  --color-bg-deep: #051e3e;
-  --color-bg-dark: #251e3e;
-  --color-bg-mid: #451e3e;
-  --color-bg-warm: #651e3e;
-  --color-accent: #851e3e;
-  --color-accent-hover: #9a2548;
+  /* ─── Color Palette (Enhanced Contrast) ─────────────────────────────────── */
+  --color-bg-deep: #0a0f1a;
+  /* Nền sâu nhất - gần như đen */
+  --color-bg-dark: #121a2d;
+  /* Nền sidebar/header */
+  --color-bg-mid: #1a2541;
+  /* Nền cards */
+  --color-bg-warm: #243156;
+  /* Hover states */
+  --color-accent: #7c3aed;
+  /* Accent chính - violet */
+  --color-accent-hover: #8b5cf6;
+  /* Accent hover */
 
-  --color-glow: #c77dff;
-  --color-glow-soft: rgba(199, 125, 255, 0.15);
-  --color-glow-border: rgba(199, 125, 255, 0.25);
+  --color-glow: #a78bfa;
+  /* Glow - violet sáng */
+  --color-glow-soft: rgba(167, 139, 250, 0.12);
+  --color-glow-border: rgba(167, 139, 250, 0.3);
 
-  --color-text: #e8e0f0;
-  --color-text-muted: #8b7fa8;
-  --color-text-dim: #5c5272;
+  --color-text: #f1f5f9;
+  /* Text chính - trắng sáng */
+  --color-text-muted: #94a3b8;
+  /* Text phụ - xám sáng */
+  --color-text-dim: #64748b;
+  /* Text mờ */
 
-  --color-success: #4ade80;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
-  --color-info: #60a5fa;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
 
   /* Priority colors */
-  --color-priority-low: #60a5fa;
-  --color-priority-medium: #fbbf24;
-  --color-priority-high: #f87171;
+  --color-priority-low: #3b82f6;
+  --color-priority-medium: #f59e0b;
+  --color-priority-high: #ef4444;
 
   /* ─── Typography ────────────────────────────────────────────────────────── */
   --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -65,10 +75,10 @@
   --radius-full: 9999px;
 
   /* ─── Shadows ───────────────────────────────────────────────────────────── */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(199, 125, 255, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(167, 139, 250, 0.2);
 
   /* ─── Transitions ───────────────────────────────────────────────────────── */
   --transition-fast: 150ms ease;
