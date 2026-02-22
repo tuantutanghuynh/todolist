@@ -18,6 +18,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .logoIcon {
@@ -47,6 +48,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  flex-shrink: 0;
 }
 
 .userInfo {
@@ -106,4 +108,32 @@
 .logoutIcon {
   width: 18px;
   height: 18px;
+}
+
+/* Theme Toggle Button */
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--color-glow-soft);
+  border: 1px solid var(--color-glow-border);
+  border-radius: var(--radius-full);
+  color: var(--color-glow);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.themeToggle:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+  transform: rotate(15deg);
+}
+
+.themeIcon {
+  width: 20px;
+  height: 20px;
 }
