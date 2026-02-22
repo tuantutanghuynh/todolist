@@ -1,123 +1,128 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/contexts/AuthContext'
-import apiClient from '@/lib/axios'
-import type { Todo, Category, PaginatedResponse } from '@/types/todo'
+import { queryKeys } from '@/lib/queryKeys'
+import { todoApi, categoryApi } from '@/lib/todoApi'
+import type { TodoPayload } from '@/lib/todoApi'
+import type { Todo } from '@/types/todo'
 import StatsCards from './StatsCards'
 import TodoItem from './TodoItem'
 import TodoModal, { type TodoFormData } from './TodoModal'
 import styles from './TodosPage.module.css'
 
-interface Stats {
-  total: number
-  pending: number
-  completed: number
-  overdue: number
-}
-
 export default function TodosPage() {
   const { user } = useAuth()
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, completed: 0, overdue: 0 })
-  const [loading, setLoading] = useState(true)
+  const qc = useQueryClient()
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
-
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false)
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
 
-  useEffect(() => {
-    fetchData()
-    fetchCategories()
-  }, [])
+  // ── Queries ──────────────────────────────────────────────────────────────────
 
-  const fetchData = async () => {
-    setLoading(true)
-    try {
-      const [todosRes, pendingRes, completedRes, overdueRes] = await Promise.all([
-        apiClient.get<PaginatedResponse<Todo>>('/api/todos', { params: { per_page: 20 } }),
-        apiClient.get<PaginatedResponse<Todo>>('/api/todos', { params: { status: 'pending', per_page: 1 } }),
-        apiClient.get<PaginatedResponse<Todo>>('/api/todos', { params: { status: 'completed', per_page: 1 } }),
-        apiClient.get<PaginatedResponse<Todo>>('/api/todos', { params: { status: 'overdue', per_page: 1 } }),
-      ])
-      setTodos(todosRes.data.data)
-      setStats({
-        total: todosRes.data.meta.total,
-        pending: pendingRes.data.meta.total,
-        completed: completedRes.data.meta.total,
-        overdue: overdueRes.data.meta.total,
-      })
-    } catch (error) {
-      console.error('Failed to fetch todos:', error)
-    } finally {
-      setLoading(false)
-    }
+  const { data: todosData, isLoading } = useQuery({
+    queryKey: queryKeys.todos.list({ per_page: 20 }),
+    queryFn: () => todoApi.list({ per_page: 20 }),
+  })
+
+  const { data: statsData } = useQuery({
+    queryKey: queryKeys.todos.stats(),
+    queryFn: todoApi.stats,
+  })
+
+  const { data: categoriesData } = useQuery({
+    queryKey: queryKeys.categories.list(),
+    queryFn: categoryApi.list,
+  })
+
+  const todos = todosData?.data ?? []
+  const categories = categoriesData?.data ?? []
+  const stats = {
+    total: todosData?.meta.total ?? 0,
+    pending: statsData?.pending ?? 0,
+    completed: statsData?.completed ?? 0,
+    overdue: statsData?.overdue ?? 0,
   }
 
-  const fetchCategories = async () => {
-    try {
-      const res = await apiClient.get<{ data: Category[] }>('/api/categories')
-      setCategories(res.data.data)
-    } catch (error) {
-      console.error('Failed to fetch categories:', error)
-    }
-  }
+  // ── Mutations ─────────────────────────────────────────────────────────────────
 
-  const handleToggle = async (id: number) => {
-    try {
-      await apiClient.patch(`/api/todos/${id}/toggle`)
-      setTodos((prev) =>
-        prev.map((todo) =>
-          todo.id === id ? { ...todo, is_completed: !todo.is_completed } : todo
-        )
-      )
-      fetchData()
-    } catch (error) {
-      console.error('Failed to toggle todo:', error)
-    }
-  }
+  // Toggle: dùng optimistic update để UI phản hồi ngay lập tức
+  const toggleMutation = useMutation({
+    mutationFn: (id: number) => todoApi.toggle(id),
+    onMutate: async (id) => {
+      // Hủy mọi refetch đang pending để tránh overwrite optimistic update
+      await qc.cancelQueries({ queryKey: queryKeys.todos.lists() })
+      // Lưu dữ liệu cũ để rollback nếu có lỗi
+      const prev = qc.getQueryData(queryKeys.todos.list({ per_page: 20 }))
+      // Cập nhật cache ngay lập tức (không chờ server)
+      qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), (old: typeof todosData) => ({
+        ...old!,
+        data: old!.data.map((t) =>
+          t.id === id ? { ...t, is_completed: !t.is_completed } : t
+        ),
+      }))
+      return { prev }
+    },
+    onError: (_err, _id, ctx) => {
+      // Rollback nếu server trả lỗi
+      if (ctx?.prev) qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), ctx.prev)
+    },
+    onSettled: () => {
+      // Luôn sync lại dữ liệu thật từ server sau khi mutation xong
+      qc.invalidateQueries({ queryKey: queryKeys.todos.all })
+    },
+  })
 
-  const handleOpenCreate = () => {
-    setEditingTodo(null)
-    setModalOpen(true)
-  }
+  const createMutation = useMutation({
+    mutationFn: (data: TodoPayload) => todoApi.create(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.todos.all })
+    },
+  })
 
-  const handleOpenEdit = (todo: Todo) => {
-    setEditingTodo(todo)
-    setModalOpen(true)
-  }
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<TodoPayload> }) =>
+      todoApi.update(id, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.todos.all })
+    },
+  })
 
-  const handleDelete = async (id: number) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => todoApi.delete(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.todos.all })
+    },
+  })
+
+  // ── Handlers ──────────────────────────────────────────────────────────────────
+
+  const handleToggle = (id: number) => toggleMutation.mutate(id)
+
+  const handleOpenCreate = () => { setEditingTodo(null); setModalOpen(true) }
+
+  const handleOpenEdit = (todo: Todo) => { setEditingTodo(todo); setModalOpen(true) }
+
+  const handleDelete = (id: number) => {
     if (!window.confirm('Delete this task?')) return
-    try {
-      await apiClient.delete(`/api/todos/${id}`)
-      setTodos((prev) => prev.filter((t) => t.id !== id))
-      fetchData()
-    } catch (error) {
-      console.error('Failed to delete todo:', error)
-    }
+    deleteMutation.mutate(id)
   }
 
-  const handleSubmit = async (data: TodoFormData) => {
-    const payload = {
-      title: data.title,
-      description: data.description || undefined,
-      priority: data.priority,
-      due_date: data.due_date || undefined,
-      category_id: data.category_id ? Number(data.category_id) : undefined,
+  const handleSubmit = async (form: TodoFormData) => {
+    const payload: TodoPayload = {
+      title: form.title,
+      description: form.description || undefined,
+      priority: form.priority,
+      due_date: form.due_date || undefined,
+      category_id: form.category_id ? Number(form.category_id) : undefined,
     }
-
     if (editingTodo) {
-      const res = await apiClient.patch<{ data: Todo }>(`/api/todos/${editingTodo.id}`, payload)
-      setTodos((prev) =>
-        prev.map((t) => (t.id === editingTodo.id ? res.data.data : t))
-      )
+      await updateMutation.mutateAsync({ id: editingTodo.id, data: payload })
     } else {
-      const res = await apiClient.post<{ data: Todo }>('/api/todos', payload)
-      setTodos((prev) => [res.data.data, ...prev])
+      await createMutation.mutateAsync(payload)
     }
-    fetchData()
   }
+
+  // ── Filter ────────────────────────────────────────────────────────────────────
 
   const filteredTodos = todos.filter((todo) => {
     if (filter === 'active') return !todo.is_completed
@@ -125,7 +130,8 @@ export default function TodosPage() {
     return true
   })
 
-  const completionPercent = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0
+  const completionPercent =
+    stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0
 
   return (
     <div className={styles.page}>
@@ -167,24 +173,15 @@ export default function TodosPage() {
           </div>
           <div className={styles.tasksHeaderRight}>
             <div className={styles.filterTabs}>
-              <button
-                className={`${styles.filterTab} ${filter === 'all' ? styles.filterTabActive : ''}`}
-                onClick={() => setFilter('all')}
-              >
-                All
-              </button>
-              <button
-                className={`${styles.filterTab} ${filter === 'active' ? styles.filterTabActive : ''}`}
-                onClick={() => setFilter('active')}
-              >
-                Active
-              </button>
-              <button
-                className={`${styles.filterTab} ${filter === 'completed' ? styles.filterTabActive : ''}`}
-                onClick={() => setFilter('completed')}
-              >
-                Completed
-              </button>
+              {(['all', 'active', 'completed'] as const).map((f) => (
+                <button
+                  key={f}
+                  className={`${styles.filterTab} ${filter === f ? styles.filterTabActive : ''}`}
+                  onClick={() => setFilter(f)}
+                >
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
             </div>
             <button className={`btn btn-primary ${styles.addBtn}`} onClick={handleOpenCreate}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={styles.addBtnIcon}>
@@ -197,7 +194,7 @@ export default function TodosPage() {
 
         {/* Task List */}
         <div className={styles.tasksList}>
-          {loading ? (
+          {isLoading ? (
             <div className={styles.loading}>
               <div className={styles.spinner} />
               <span>Loading tasks...</span>
@@ -208,7 +205,7 @@ export default function TodosPage() {
                 <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM6.39 9.967l2.18 2.179a.75.75 0 001.117.026l4.5-4.5a.75.75 0 10-1.061-1.06l-3.942 3.94-1.121-1.12a.75.75 0 00-1.06 1.06l.387.375z" />
               </svg>
               <p>No tasks found</p>
-              <button className={`btn btn-primary btn-sm`} onClick={handleOpenCreate}>
+              <button className="btn btn-primary btn-sm" onClick={handleOpenCreate}>
                 Add your first task
               </button>
             </div>
