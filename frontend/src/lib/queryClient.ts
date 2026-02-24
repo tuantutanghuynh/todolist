@@ -3,21 +3,21 @@ import { QueryClient } from '@tanstack/react-query'
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Dữ liệu coi là "tươi" trong 30 giây → không refetch nếu chưa stale
+      // Data is considered "fresh" for 30 seconds → don't refetch if not stale
       staleTime: 30_000,
-      // Giữ dữ liệu cũ trong cache 5 phút sau khi component unmount
+      // Keep old data in cache for 5 minutes after component unmount
       gcTime: 5 * 60_000,
-      // Không tự retry khi lỗi 4xx (chỉ retry lỗi mạng)
+      // Don't auto-retry on 4xx errors (only retry network errors)
       retry: (failureCount, error: unknown) => {
         const status = (error as { response?: { status?: number } })?.response?.status
         if (status && status >= 400 && status < 500) return false
         return failureCount < 2
       },
-      // Refetch khi tab được focus lại
+      // Refetch when tab regains focus
       refetchOnWindowFocus: true,
     },
     mutations: {
-      // Không retry mutation (tránh double submit)
+      // Don't retry mutations (avoid double submit)
       retry: false,
     },
   },
