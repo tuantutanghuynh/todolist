@@ -45,15 +45,15 @@ export default function TodosPage() {
 
   // ── Mutations ─────────────────────────────────────────────────────────────────
 
-  // Toggle: dùng optimistic update để UI phản hồi ngay lập tức
+  // Toggle: use optimistic update so UI responds immediately
   const toggleMutation = useMutation({
     mutationFn: (id: number) => todoApi.toggle(id),
     onMutate: async (id) => {
-      // Hủy mọi refetch đang pending để tránh overwrite optimistic update
+      // Cancel all pending refetches to avoid overwriting the optimistic update
       await qc.cancelQueries({ queryKey: queryKeys.todos.lists() })
-      // Lưu dữ liệu cũ để rollback nếu có lỗi
+      // Save previous data for rollback on error
       const prev = qc.getQueryData(queryKeys.todos.list({ per_page: 20 }))
-      // Cập nhật cache ngay lập tức (không chờ server)
+      // Update cache immediately (don't wait for server)
       qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), (old: typeof todosData) => ({
         ...old!,
         data: old!.data.map((t) =>
@@ -63,11 +63,11 @@ export default function TodosPage() {
       return { prev }
     },
     onError: (_err, _id, ctx) => {
-      // Rollback nếu server trả lỗi
+      // Rollback if server returns an error
       if (ctx?.prev) qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), ctx.prev)
     },
     onSettled: () => {
-      // Luôn sync lại dữ liệu thật từ server sau khi mutation xong
+      // Always sync real data from server after mutation completes
       qc.invalidateQueries({ queryKey: queryKeys.todos.all })
     },
   })
