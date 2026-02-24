@@ -1,6 +1,6 @@
 // ─── Todo API functions ────────────────────────────────────────────────────────
-// Tách API calls thành các hàm riêng (service layer).
-// React Query sẽ gọi những hàm này trong queryFn / mutationFn.
+// Separate API calls into individual functions (service layer).
+// React Query will call these functions in queryFn / mutationFn.
 
 import apiClient from './axios'
 import type { Todo, Category, PaginatedResponse } from '@/types/todo'
@@ -32,11 +32,11 @@ export interface CategoryPayload {
 // ── Todo API ───────────────────────────────────────────────────────────────────
 
 export const todoApi = {
-  // Lấy danh sách todos (có filter, search, pagination)
+  // Get todo list (with filter, search, pagination)
   list: (params: TodoListParams = {}): Promise<PaginatedResponse<Todo>> =>
     apiClient.get('/api/todos', { params }).then((r) => r.data),
 
-  // Lấy thống kê (gọi 4 request song song, trả về object stats)
+  // Get statistics (runs 3 requests in parallel, returns stats object)
   stats: async () => {
     const [pending, completed, overdue] = await Promise.all([
       apiClient.get<PaginatedResponse<Todo>>('/api/todos', { params: { status: 'pending', per_page: 1 } }),
@@ -50,19 +50,19 @@ export const todoApi = {
     }
   },
 
-  // Tạo todo mới
+  // Create new todo
   create: (data: TodoPayload): Promise<{ data: Todo }> =>
     apiClient.post('/api/todos', data).then((r) => r.data),
 
-  // Cập nhật todo
+  // Update todo
   update: (id: number, data: Partial<TodoPayload>): Promise<{ data: Todo }> =>
     apiClient.patch(`/api/todos/${id}`, data).then((r) => r.data),
 
-  // Toggle hoàn thành
+  // Toggle completion
   toggle: (id: number): Promise<{ data: Todo }> =>
     apiClient.patch(`/api/todos/${id}/toggle`).then((r) => r.data),
 
-  // Xóa todo
+  // Delete todo
   delete: (id: number): Promise<void> =>
     apiClient.delete(`/api/todos/${id}`).then(() => undefined),
 }
@@ -70,19 +70,19 @@ export const todoApi = {
 // ── Category API ───────────────────────────────────────────────────────────────
 
 export const categoryApi = {
-  // Lấy tất cả categories (kèm pending_count)
+  // Get all categories (with pending_count)
   list: (): Promise<{ data: Category[] }> =>
     apiClient.get('/api/categories').then((r) => r.data),
 
-  // Tạo category mới
+  // Create new category
   create: (data: CategoryPayload): Promise<{ data: Category }> =>
     apiClient.post('/api/categories', data).then((r) => r.data),
 
-  // Cập nhật category
+  // Update category
   update: (id: number, data: CategoryPayload): Promise<{ data: Category }> =>
     apiClient.patch(`/api/categories/${id}`, data).then((r) => r.data),
 
-  // Xóa category
+  // Delete category
   delete: (id: number): Promise<void> =>
     apiClient.delete(`/api/categories/${id}`).then(() => undefined),
 }
