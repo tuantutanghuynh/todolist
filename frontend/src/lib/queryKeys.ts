@@ -1,12 +1,12 @@
 // ─── Query Keys ────────────────────────────────────────────────────────────────
-// Tập trung tất cả query keys vào một chỗ.
-// Lợi ích: khi cần invalidate, chỉ cần dùng key đã định nghĩa ở đây.
+// Centralize all query keys in one place.
+// Benefit: when invalidating, just use the key defined here.
 //
-// Cách đặt key theo cấu trúc mảng:
-//   ['todos']                    → tất cả queries liên quan đến todos
-//   ['todos', 'list', params]    → danh sách todos với params cụ thể
-//   ['todos', 'stats']           → thống kê todos
-//   ['categories', 'list']       → danh sách categories
+// Key structure using arrays:
+//   ['todos']                    → all queries related to todos
+//   ['todos', 'list', params]    → todo list with specific params
+//   ['todos', 'stats']           → todo statistics
+//   ['categories', 'list']       → categories list
 
 export const queryKeys = {
   todos: {
