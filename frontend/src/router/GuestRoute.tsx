@@ -2,8 +2,8 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 
 /**
- * Chỉ cho phép truy cập khi chưa đăng nhập.
- * Nếu đã đăng nhập → redirect về trang chủ /.
+ * Only allows access when not logged in.
+ * If logged in → redirects to home /.
  */
 export default function GuestRoute() {
   const { user, loading } = useAuth()
