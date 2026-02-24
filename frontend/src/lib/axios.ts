@@ -2,12 +2,12 @@ import axios from 'axios'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,   // gửi session cookie cross-origin (bắt buộc với Sanctum)
-  withXSRFToken: true,     // tự đọc XSRF-TOKEN cookie và gửi kèm header X-XSRF-TOKEN
+  withCredentials: true,   // send session cookie cross-origin (required for Sanctum)
+  withXSRFToken: true,     // auto-read XSRF-TOKEN cookie and attach as X-XSRF-TOKEN header
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest', // để Laravel nhận diện đây là AJAX request
+    'X-Requested-With': 'XMLHttpRequest', // so Laravel identifies this as an AJAX request
   },
 })
 
@@ -27,12 +27,12 @@ apiClient.interceptors.response.use(
 
     const { status } = error.response
 
-    // 401: Để cho AuthContext và Router xử lý redirect
-    // Không dùng window.location.href vì sẽ gây reload loop
+    // 401: Let AuthContext and Router handle the redirect
+    // Don't use window.location.href as it would cause a reload loop
 
     if (status === 419) {
-      // CSRF token mismatch → thường xảy ra khi session hết hạn
-      // Reload để lấy lại cookie mới
+      // CSRF token mismatch → usually happens when session expires
+      // Reload to get a fresh cookie
       window.location.reload()
     }
 
@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
   },
 )
 
-// ─── Helper: lấy CSRF cookie trước khi login/register ───────────────────────
+// ─── Helper: fetch CSRF cookie before login/register ─────────────────────────
 export const getCsrfCookie = () =>
   apiClient.get('/sanctum/csrf-cookie')
 
