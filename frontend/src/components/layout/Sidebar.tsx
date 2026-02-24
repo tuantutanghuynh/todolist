@@ -23,7 +23,7 @@ export default function Sidebar() {
   const { data: counts } = useQuery({
     queryKey: ['sidebar', 'counts'],
     queryFn: sidebarApi.counts,
-    // Sidebar counts ít quan trọng hơn, cache 1 phút
+    // Sidebar counts are less critical, cache for 1 minute
     staleTime: 60_000,
   })
 
@@ -48,7 +48,7 @@ export default function Sidebar() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => categoryApi.delete(id),
-    // Optimistic update: xóa ngay khỏi list không chờ server
+    // Optimistic update: remove immediately from list without waiting for server
     onMutate: async (id) => {
       await qc.cancelQueries({ queryKey: queryKeys.categories.list() })
       const prev = qc.getQueryData(queryKeys.categories.list())
