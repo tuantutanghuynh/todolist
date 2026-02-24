@@ -11,7 +11,7 @@ export default function App() {
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
-      {/* Devtools chỉ hiện ở development, tự ẩn khi build production */}
+      {/* Devtools only visible in development, auto-hidden in production build */}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
