@@ -26,9 +26,9 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true) // true = đang kiểm tra session
+  const [loading, setLoading] = useState(true) // true = checking session
 
-  // Khôi phục session khi tải lại trang
+  // Restore session on page reload
   useEffect(() => {
     apiClient
       .get<{ user: User }>('/api/user')
@@ -78,6 +78,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth phải được dùng bên trong <AuthProvider>')
+  if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>')
   return ctx
 }
