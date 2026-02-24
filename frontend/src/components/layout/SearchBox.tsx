@@ -25,13 +25,13 @@ export default function SearchBox() {
   const inputRef = useRef<HTMLInputElement>(null)
   const debouncedQuery = useDebounce(query, 350)
 
-  // ── React Query: chỉ fetch khi có từ khóa ────────────────────────────────────
+  // ── React Query: only fetch when there is a keyword ──────────────────────────
   const { data, isFetching } = useQuery({
     queryKey: ['search', debouncedQuery],
     queryFn: () => todoApi.list({ search: debouncedQuery, per_page: 8 }),
-    enabled: debouncedQuery.trim().length > 0,  // Không fetch khi query rỗng
-    staleTime: 30_000,  // Cache kết quả 30 giây
-    placeholderData: (prev) => prev,  // Giữ kết quả cũ khi đang tải mới
+    enabled: debouncedQuery.trim().length > 0,  // Don't fetch when query is empty
+    staleTime: 30_000,  // Cache results for 30 seconds
+    placeholderData: (prev) => prev,  // Keep previous results while loading new ones
   })
 
   const results: Todo[] = data?.data ?? []
