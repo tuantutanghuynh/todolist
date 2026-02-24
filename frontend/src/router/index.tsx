@@ -7,7 +7,7 @@ import RegisterPage from '@/pages/auth/RegisterPage'
 import TodosPage from '@/pages/todos/TodosPage'
 
 export const router = createBrowserRouter([
-  // ─── Guest routes (chỉ truy cập khi chưa đăng nhập) ─────────────────────
+  // ─── Guest routes (only accessible when not logged in) ───────────────────
   {
     element: <GuestRoute />,
     children: [
@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // ─── Protected routes (cần đăng nhập) ───────────────────────────────────
+  // ─── Protected routes (requires authentication) ──────────────────────────
   {
     element: <ProtectedRoute />,
     children: [
