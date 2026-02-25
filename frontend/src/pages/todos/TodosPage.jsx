@@ -3,19 +3,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/contexts/AuthContext'
 import { queryKeys } from '@/lib/queryKeys'
 import { todoApi, categoryApi } from '@/lib/todoApi'
-import type { TodoPayload } from '@/lib/todoApi'
-import type { Todo } from '@/types/todo'
 import StatsCards from './StatsCards'
 import TodoItem from './TodoItem'
-import TodoModal, { type TodoFormData } from './TodoModal'
+import TodoModal from './TodoModal'
 import styles from './TodosPage.module.css'
 
 export default function TodosPage() {
   const { user } = useAuth()
   const qc = useQueryClient()
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [filter, setFilter] = useState('all')
   const [modalOpen, setModalOpen] = useState(false)
-  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
+  const [editingTodo, setEditingTodo] = useState(null)
 
   // ── Queries ──────────────────────────────────────────────────────────────────
 
@@ -47,16 +45,16 @@ export default function TodosPage() {
 
   // Toggle: use optimistic update so UI responds immediately
   const toggleMutation = useMutation({
-    mutationFn: (id: number) => todoApi.toggle(id),
+    mutationFn: (id) => todoApi.toggle(id),
     onMutate: async (id) => {
       // Cancel all pending refetches to avoid overwriting the optimistic update
       await qc.cancelQueries({ queryKey: queryKeys.todos.lists() })
       // Save previous data for rollback on error
       const prev = qc.getQueryData(queryKeys.todos.list({ per_page: 20 }))
       // Update cache immediately (don't wait for server)
-      qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), (old: typeof todosData) => ({
-        ...old!,
-        data: old!.data.map((t) =>
+      qc.setQueryData(queryKeys.todos.list({ per_page: 20 }), (old) => ({
+        ...old,
+        data: old.data.map((t) =>
           t.id === id ? { ...t, is_completed: !t.is_completed } : t
         ),
       }))
@@ -73,22 +71,21 @@ export default function TodosPage() {
   })
 
   const createMutation = useMutation({
-    mutationFn: (data: TodoPayload) => todoApi.create(data),
+    mutationFn: (data) => todoApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.todos.all })
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<TodoPayload> }) =>
-      todoApi.update(id, data),
+    mutationFn: ({ id, data }) => todoApi.update(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.todos.all })
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => todoApi.delete(id),
+    mutationFn: (id) => todoApi.delete(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.todos.all })
     },
@@ -96,19 +93,19 @@ export default function TodosPage() {
 
   // ── Handlers ──────────────────────────────────────────────────────────────────
 
-  const handleToggle = (id: number) => toggleMutation.mutate(id)
+  const handleToggle = (id) => toggleMutation.mutate(id)
 
   const handleOpenCreate = () => { setEditingTodo(null); setModalOpen(true) }
 
-  const handleOpenEdit = (todo: Todo) => { setEditingTodo(todo); setModalOpen(true) }
+  const handleOpenEdit = (todo) => { setEditingTodo(todo); setModalOpen(true) }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id) => {
     if (!window.confirm('Delete this task?')) return
     deleteMutation.mutate(id)
   }
 
-  const handleSubmit = async (form: TodoFormData) => {
-    const payload: TodoPayload = {
+  const handleSubmit = async (form) => {
+    const payload = {
       title: form.title,
       description: form.description || undefined,
       priority: form.priority,
@@ -173,7 +170,7 @@ export default function TodosPage() {
           </div>
           <div className={styles.tasksHeaderRight}>
             <div className={styles.filterTabs}>
-              {(['all', 'active', 'completed'] as const).map((f) => (
+              {['all', 'active', 'completed'].map((f) => (
                 <button
                   key={f}
                   className={`${styles.filterTab} ${filter === f ? styles.filterTabActive : ''}`}

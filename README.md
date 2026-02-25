@@ -10,7 +10,7 @@ A full-stack task management application built with **Laravel 12** (API backend)
 |-------|-----------|
 | Backend | PHP 8.2+, Laravel 12, Laravel Sanctum |
 | Database | MySQL (primary) / SQLite (fallback) |
-| Frontend | React 19, TypeScript 5.9, Vite 7 |
+| Frontend | React 19, JavaScript (ES Modules), Vite 7 |
 | State | TanStack React Query 5 |
 | Routing | React Router 7 |
 | HTTP | Axios |
@@ -50,7 +50,7 @@ todolist/
 │   └── routes/
 │       └── api.php                # API routes
 │
-├── frontend/         # React + TypeScript SPA
+├── frontend/         # React + JavaScript SPA
 │   └── src/
 │       ├── components/layout/     # MainLayout, Sidebar, Header, SearchBox, CategoryModal
 │       ├── contexts/              # AuthContext
@@ -59,8 +59,7 @@ todolist/
 │       ├── pages/
 │       │   ├── auth/              # LoginPage, RegisterPage
 │       │   └── todos/             # TodosPage, TodoItem, TodoModal, StatsCards
-│       ├── router/                # index, ProtectedRoute, GuestRoute
-│       └── types/                 # todo.ts, auth.ts
+│       └── router/                # index, ProtectedRoute, GuestRoute
 │
 └── documents/        # Project guides and documentation
 ```
@@ -305,7 +304,7 @@ The app uses **Laravel Sanctum SPA authentication** (cookie/session based — no
 
 ### Query key conventions
 
-```typescript
+```js
 queryKeys.todos.lists()          // All todo list queries
 queryKeys.todos.list(params)     // Specific list with params
 queryKeys.todos.stats()          // Statistics

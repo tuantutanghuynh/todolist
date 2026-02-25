@@ -1,14 +1,7 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import type { AxiosError } from 'axios'
 import './auth.css'
-
-interface ValidationErrors {
-  email?: string[]
-  password?: string[]
-}
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -16,11 +9,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [errors, setErrors] = useState({})
   const [generalError, setGeneralError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setErrors({})
     setGeneralError('')
@@ -29,10 +22,9 @@ export default function LoginPage() {
     try {
       await login(email, password)
     } catch (err) {
-      const error = err as AxiosError<{ message?: string; errors?: ValidationErrors }>
-      if (error.response?.status === 422) {
-        setErrors(error.response.data.errors ?? {})
-        setGeneralError(error.response.data.message ?? '')
+      if (err.response?.status === 422) {
+        setErrors(err.response.data.errors ?? {})
+        setGeneralError(err.response.data.message ?? '')
       } else {
         setGeneralError('Something went wrong. Please try again.')
       }

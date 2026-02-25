@@ -1,25 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { Todo, Category } from '@/types/todo'
 import styles from './TodoModal.module.css'
 
-interface TodoModalProps {
-  open: boolean
-  todo?: Todo | null          // null = create mode, Todo = edit mode
-  categories: Category[]
-  onClose: () => void
-  onSubmit: (data: TodoFormData) => Promise<void>
-}
-
-export interface TodoFormData {
-  title: string
-  description: string
-  priority: 1 | 2 | 3
-  due_date: string
-  category_id: string
-}
-
-export default function TodoModal({ open, todo, categories, onClose, onSubmit }: TodoModalProps) {
-  const [form, setForm] = useState<TodoFormData>({
+export default function TodoModal({ open, todo, categories, onClose, onSubmit }) {
+  const [form, setForm] = useState({
     title: '',
     description: '',
     priority: 2,
@@ -27,7 +10,7 @@ export default function TodoModal({ open, todo, categories, onClose, onSubmit }:
     category_id: '',
   })
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Partial<TodoFormData>>({})
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     if (open) {
@@ -46,25 +29,24 @@ export default function TodoModal({ open, todo, categories, onClose, onSubmit }:
     }
   }, [open, todo])
 
-  const validate = (): boolean => {
-    const errs: Partial<TodoFormData> = {}
+  const validate = () => {
+    const errs = {}
     if (!form.title.trim()) errs.title = 'Title is required'
     else if (form.title.length > 255) errs.title = 'Title must be under 255 characters'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validate()) return
     setLoading(true)
     try {
       await onSubmit(form)
       onClose()
-    } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { errors?: Record<string, string[]> } } }
-      if (axiosErr.response?.data?.errors) {
-        const apiErrors = axiosErr.response.data.errors
+    } catch (err) {
+      if (err.response?.data?.errors) {
+        const apiErrors = err.response.data.errors
         setErrors({
           title: apiErrors.title?.[0],
           description: apiErrors.description?.[0],
@@ -76,7 +58,7 @@ export default function TodoModal({ open, todo, categories, onClose, onSubmit }:
     }
   }
 
-  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdrop = (e) => {
     if (e.target === e.currentTarget) onClose()
   }
 
@@ -132,7 +114,7 @@ export default function TodoModal({ open, todo, categories, onClose, onSubmit }:
               <select
                 className={styles.select}
                 value={form.priority}
-                onChange={(e) => setForm({ ...form, priority: Number(e.target.value) as 1 | 2 | 3 })}
+                onChange={(e) => setForm({ ...form, priority: Number(e.target.value) })}
               >
                 <option value={1}>Low</option>
                 <option value={2}>Medium</option>

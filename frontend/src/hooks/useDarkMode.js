@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 
-type Theme = 'light' | 'dark'
-
 export function useDarkMode() {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState(() => {
     // Check localStorage first
-    const saved = localStorage.getItem('theme') as Theme | null
+    const saved = localStorage.getItem('theme')
     if (saved) return saved
 
     // Then check system preference

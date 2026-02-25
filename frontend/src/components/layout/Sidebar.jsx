@@ -2,16 +2,14 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/lib/queryKeys'
 import { categoryApi, sidebarApi } from '@/lib/todoApi'
-import type { CategoryPayload } from '@/lib/todoApi'
-import type { Category } from '@/types/todo'
-import CategoryModal, { type CategoryFormData } from './CategoryModal'
+import CategoryModal from './CategoryModal'
 import styles from './Sidebar.module.css'
 
 export default function Sidebar() {
   const qc = useQueryClient()
   const [activeView, setActiveView] = useState('dashboard')
   const [modalOpen, setModalOpen] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [editingCategory, setEditingCategory] = useState(null)
 
   // ── Queries ──────────────────────────────────────────────────────────────────
 
@@ -32,29 +30,28 @@ export default function Sidebar() {
   // ── Mutations ─────────────────────────────────────────────────────────────────
 
   const createMutation = useMutation({
-    mutationFn: (data: CategoryPayload) => categoryApi.create(data),
+    mutationFn: (data) => categoryApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.categories.all })
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: CategoryPayload }) =>
-      categoryApi.update(id, data),
+    mutationFn: ({ id, data }) => categoryApi.update(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.categories.all })
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => categoryApi.delete(id),
+    mutationFn: (id) => categoryApi.delete(id),
     // Optimistic update: remove immediately from list without waiting for server
     onMutate: async (id) => {
       await qc.cancelQueries({ queryKey: queryKeys.categories.list() })
       const prev = qc.getQueryData(queryKeys.categories.list())
-      qc.setQueryData(queryKeys.categories.list(), (old: typeof categoriesData) => ({
-        ...old!,
-        data: old!.data.filter((c) => c.id !== id),
+      qc.setQueryData(queryKeys.categories.list(), (old) => ({
+        ...old,
+        data: old.data.filter((c) => c.id !== id),
       }))
       return { prev }
     },
@@ -70,20 +67,20 @@ export default function Sidebar() {
 
   const handleOpenCreate = () => { setEditingCategory(null); setModalOpen(true) }
 
-  const handleOpenEdit = (e: React.MouseEvent, cat: Category) => {
+  const handleOpenEdit = (e, cat) => {
     e.stopPropagation()
     setEditingCategory(cat)
     setModalOpen(true)
   }
 
-  const handleDelete = (e: React.MouseEvent, id: number) => {
+  const handleDelete = (e, id) => {
     e.stopPropagation()
     if (!window.confirm('Delete this category? Tasks in it will not be deleted.')) return
     deleteMutation.mutate(id)
   }
 
-  const handleSubmit = async (form: CategoryFormData) => {
-    const payload: CategoryPayload = {
+  const handleSubmit = async (form) => {
+    const payload = {
       name: form.name,
       color: form.color,
       icon: form.icon || undefined,
@@ -118,7 +115,7 @@ export default function Sidebar() {
                 <path fillRule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clipRule="evenodd" />
               </svg>
               <span className={styles.navLabel}>Today</span>
-              {(counts?.today ?? 0) > 0 && <span className={styles.navBadge}>{counts!.today}</span>}
+              {(counts?.today ?? 0) > 0 && <span className={styles.navBadge}>{counts.today}</span>}
             </button>
           </li>
           <li>
@@ -127,7 +124,7 @@ export default function Sidebar() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clipRule="evenodd" />
               </svg>
               <span className={styles.navLabel}>Upcoming</span>
-              {(counts?.upcoming ?? 0) > 0 && <span className={styles.navBadge}>{counts!.upcoming}</span>}
+              {(counts?.upcoming ?? 0) > 0 && <span className={styles.navBadge}>{counts.upcoming}</span>}
             </button>
           </li>
           <li>
@@ -136,7 +133,7 @@ export default function Sidebar() {
                 <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
               </svg>
               <span className={styles.navLabel}>Overdue</span>
-              {(counts?.overdue ?? 0) > 0 && <span className={`${styles.navBadge} ${styles.navBadgeDanger}`}>{counts!.overdue}</span>}
+              {(counts?.overdue ?? 0) > 0 && <span className={`${styles.navBadge} ${styles.navBadgeDanger}`}>{counts.overdue}</span>}
             </button>
           </li>
           <li>
@@ -145,7 +142,7 @@ export default function Sidebar() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
               <span className={styles.navLabel}>Completed</span>
-              {(counts?.completed ?? 0) > 0 && <span className={styles.navBadge}>{counts!.completed}</span>}
+              {(counts?.completed ?? 0) > 0 && <span className={styles.navBadge}>{counts.completed}</span>}
             </button>
           </li>
         </ul>

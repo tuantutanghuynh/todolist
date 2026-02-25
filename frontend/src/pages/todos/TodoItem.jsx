@@ -1,14 +1,6 @@
-import type { Todo } from '@/types/todo'
 import styles from './TodoItem.module.css'
 
-interface TodoItemProps {
-  todo: Todo
-  onToggle: (id: number) => void
-  onEdit: (todo: Todo) => void
-  onDelete: (id: number) => void
-}
-
-export default function TodoItem({ todo, onToggle, onEdit, onDelete }: TodoItemProps) {
+export default function TodoItem({ todo, onToggle, onEdit, onDelete }) {
   const priorityClass =
     todo.priority === 3 ? styles.priorityHigh :
     todo.priority === 2 ? styles.priorityMedium :
@@ -20,7 +12,7 @@ export default function TodoItem({ todo, onToggle, onEdit, onDelete }: TodoItemP
     todo.is_overdue && !todo.is_completed ? styles.cardOverdue : '',
   ].filter(Boolean).join(' ')
 
-  const formatDate = (dateStr: string | null) => {
+  const formatDate = (dateStr) => {
     if (!dateStr) return null
     const date = new Date(dateStr)
     return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })

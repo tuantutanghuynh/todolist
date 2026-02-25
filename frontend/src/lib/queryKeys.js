@@ -10,13 +10,13 @@
 
 export const queryKeys = {
   todos: {
-    all: ['todos'] as const,
-    lists: () => ['todos', 'list'] as const,
-    list: (params: object) => ['todos', 'list', params] as const,
-    stats: () => ['todos', 'stats'] as const,
+    all: ['todos'],
+    lists: () => ['todos', 'list'],
+    list: (params) => ['todos', 'list', params],
+    stats: () => ['todos', 'stats'],
   },
   categories: {
-    all: ['categories'] as const,
-    list: () => ['categories', 'list'] as const,
+    all: ['categories'],
+    list: () => ['categories', 'list'],
   },
-} as const
+}

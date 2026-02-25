@@ -1,13 +1,6 @@
 import styles from './StatsCards.module.css'
 
-interface StatsCardsProps {
-  total: number
-  pending: number
-  completed: number
-  overdue: number
-}
-
-export default function StatsCards({ total, pending, completed, overdue }: StatsCardsProps) {
+export default function StatsCards({ total, pending, completed, overdue }) {
   return (
     <div className={styles.grid}>
       {/* Total Tasks */}

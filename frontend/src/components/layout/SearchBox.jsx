@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { todoApi } from '@/lib/todoApi'
-import type { Todo } from '@/types/todo'
 import styles from './SearchBox.module.css'
 
 // ─── Debounce hook ────────────────────────────────────────────────────────────
-function useDebounce<T>(value: T, delay: number): T {
+function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value)
   useEffect(() => {
     const timer = setTimeout(() => setDebounced(value), delay)
@@ -14,15 +13,15 @@ function useDebounce<T>(value: T, delay: number): T {
   return debounced
 }
 
-const PRIORITY_COLORS: Record<number, string> = { 1: '#3b82f6', 2: '#f59e0b', 3: '#ef4444' }
-const PRIORITY_LABELS: Record<number, string> = { 1: 'Low', 2: 'Med', 3: 'High' }
+const PRIORITY_COLORS = { 1: '#3b82f6', 2: '#f59e0b', 3: '#ef4444' }
+const PRIORITY_LABELS = { 1: 'Low', 2: 'Med', 3: 'High' }
 
 export default function SearchBox() {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef(null)
+  const inputRef = useRef(null)
   const debouncedQuery = useDebounce(query, 350)
 
   // ── React Query: only fetch when there is a keyword ──────────────────────────
@@ -34,12 +33,12 @@ export default function SearchBox() {
     placeholderData: (prev) => prev,  // Keep previous results while loading new ones
   })
 
-  const results: Todo[] = data?.data ?? []
+  const results = data?.data ?? []
 
   // ── Click outside ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+    const handleClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
         setIsOpen(false)
       }
     }
@@ -49,7 +48,7 @@ export default function SearchBox() {
 
   // ── Ctrl+K shortcut ───────────────────────────────────────────────────────────
   useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
+    const handleKeydown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault()
         inputRef.current?.focus()
@@ -61,7 +60,7 @@ export default function SearchBox() {
   }, [])
 
   // ── Handlers ──────────────────────────────────────────────────────────────────
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setQuery(e.target.value)
     setIsOpen(true)
     setActiveIndex(-1)
@@ -77,7 +76,7 @@ export default function SearchBox() {
     inputRef.current?.focus()
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e) => {
     if (!isOpen) return
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -91,7 +90,7 @@ export default function SearchBox() {
     }
   }
 
-  const formatDate = (dateStr: string | null) => {
+  const formatDate = (dateStr) => {
     if (!dateStr) return null
     return new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
   }
@@ -191,7 +190,7 @@ export default function SearchBox() {
   )
 }
 
-function highlightMatch(text: string, query: string) {
+function highlightMatch(text, query) {
   if (!query.trim()) return <>{text}</>
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
   const parts = text.split(regex)

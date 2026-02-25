@@ -8,8 +8,8 @@ export const queryClient = new QueryClient({
       // Keep old data in cache for 5 minutes after component unmount
       gcTime: 5 * 60_000,
       // Don't auto-retry on 4xx errors (only retry network errors)
-      retry: (failureCount, error: unknown) => {
-        const status = (error as { response?: { status?: number } })?.response?.status
+      retry: (failureCount, error) => {
+        const status = error?.response?.status
         if (status && status >= 400 && status < 500) return false
         return failureCount < 2
       },

@@ -1,29 +1,15 @@
 import { useEffect, useState } from 'react'
-import type { Category } from '@/types/todo'
 import styles from './CategoryModal.module.css'
-
-interface CategoryModalProps {
-  open: boolean
-  category?: Category | null   // null = create mode
-  onClose: () => void
-  onSubmit: (data: CategoryFormData) => Promise<void>
-}
-
-export interface CategoryFormData {
-  name: string
-  color: string
-  icon: string
-}
 
 const PRESET_COLORS = [
   '#3b82f6', '#8b5cf6', '#ec4899', '#ef4444',
   '#f59e0b', '#10b981', '#14b8a6', '#f97316',
 ]
 
-export default function CategoryModal({ open, category, onClose, onSubmit }: CategoryModalProps) {
-  const [form, setForm] = useState<CategoryFormData>({ name: '', color: '#8b5cf6', icon: '' })
+export default function CategoryModal({ open, category, onClose, onSubmit }) {
+  const [form, setForm] = useState({ name: '', color: '#8b5cf6', icon: '' })
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Partial<CategoryFormData>>({})
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     if (open) {
@@ -40,25 +26,24 @@ export default function CategoryModal({ open, category, onClose, onSubmit }: Cat
     }
   }, [open, category])
 
-  const validate = (): boolean => {
-    const errs: Partial<CategoryFormData> = {}
+  const validate = () => {
+    const errs = {}
     if (!form.name.trim()) errs.name = 'Name is required'
     else if (form.name.length > 100) errs.name = 'Name must be under 100 characters'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validate()) return
     setLoading(true)
     try {
       await onSubmit(form)
       onClose()
-    } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { errors?: Record<string, string[]> } } }
-      if (axiosErr.response?.data?.errors) {
-        const apiErrors = axiosErr.response.data.errors
+    } catch (err) {
+      if (err.response?.data?.errors) {
+        const apiErrors = err.response.data.errors
         setErrors({ name: apiErrors.name?.[0] })
       }
     } finally {
@@ -66,7 +51,7 @@ export default function CategoryModal({ open, category, onClose, onSubmit }: Cat
     }
   }
 
-  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdrop = (e) => {
     if (e.target === e.currentTarget) onClose()
   }
 

@@ -1,59 +1,37 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
 import apiClient, { getCsrfCookie } from '@/lib/axios'
-import type { User } from '@/types/auth'
-
-// ─── Types ──────────────────────────────────────────────────────────────────
-
-interface AuthContextType {
-  user: User | null
-  loading: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (
-    name: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string,
-  ) => Promise<void>
-  logout: () => Promise<void>
-}
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext(null)
 
 // ─── Provider ────────────────────────────────────────────────────────────────
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true) // true = checking session
 
   // Restore session on page reload
   useEffect(() => {
     apiClient
-      .get<{ user: User }>('/api/user')
+      .get('/api/user')
       .then(({ data }) => setUser(data.user))
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])
 
-  const login = async (email: string, password: string) => {
+  const login = async (email, password) => {
     await getCsrfCookie()
-    const { data } = await apiClient.post<{ user: User }>('/api/login', {
+    const { data } = await apiClient.post('/api/login', {
       email,
       password,
     })
     setUser(data.user)
   }
 
-  const register = async (
-    name: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string,
-  ) => {
+  const register = async (name, email, password, passwordConfirmation) => {
     await getCsrfCookie()
-    const { data } = await apiClient.post<{ user: User }>('/api/register', {
+    const { data } = await apiClient.post('/api/register', {
       name,
       email,
       password,
