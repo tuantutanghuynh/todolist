@@ -98,3 +98,4 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Scheduled tasks (Laravel Scheduler)
 
 ---
+## Cap do 3 — Gan production-ready
