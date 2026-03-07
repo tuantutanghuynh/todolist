@@ -156,3 +156,4 @@ Todolist  →  Habit Tracker  →  Blog / CMS  →  Project Management Tool
 Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang moi, khong bi "lac de" stack.
 
 ---
+## Tong hop ki nang theo du an
