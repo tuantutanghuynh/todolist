@@ -149,3 +149,10 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 
 ---
 ## Lo trinh de xuat sau Todolist
+```
+Todolist  →  Habit Tracker  →  Blog / CMS  →  Project Management Tool
+```
+
+Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang moi, khong bi "lac de" stack.
+
+---
