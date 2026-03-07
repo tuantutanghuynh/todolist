@@ -132,3 +132,19 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - PDF export (DomPDF / Snappy)
 
 ---
+### 9. Recipe & Meal Planner
+
+**Mo ta:** Quan ly cong thuc nau an, lap ke hoach bua an tuan.
+
+**Tinh nang chinh:**
+- CRUD recipes (nguyen lieu, buoc thuc hien, hinh anh)
+- Weekly meal plan (keo tha recipe vao lich)
+- Tu dong tao shopping list tu meal plan
+- Tinh calo uoc tinh
+
+**Ki nang moi hoc them:**
+- Many-to-many relations (Recipe <-> Ingredient)
+- PDF / print export
+- Image upload (Laravel Storage)
+
+---
