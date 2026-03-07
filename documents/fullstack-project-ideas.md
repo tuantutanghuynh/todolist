@@ -157,3 +157,8 @@ Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang m
 
 ---
 ## Tong hop ki nang theo du an
+| Du an              | Auth | Relations | Charts | Real-time | Queue | File Upload |
+|--------------------|------|-----------|--------|-----------|-------|-------------|
+| Note Taking        |      | co ban    |        |           |       |             |
+| Expense Tracker    |      | co ban    | x      |           |       |             |
+| Habit Tracker      |      | co ban    | x      |           |       |             |
