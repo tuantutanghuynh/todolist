@@ -163,4 +163,6 @@ Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang m
 | Expense Tracker    |      | co ban    | x      |           |       |             |
 | Habit Tracker      |      | co ban    | x      |           |       |             || Blog / CMS         | x    | trung binh|        |           |       |             |
 | Bookmark Manager   | x    | trung binh|        |           | x     |             |
-| Budget Planner     | x    | phuc tap  | x      |           | x     |             |
+| Budget Planner     | x    | phuc tap  | x      |           | x     |             || Project Management | x    | phuc tap  |        | x         |       | x           |
+| Inventory Mgmt     | x    | phuc tap  | x      |           | x     | x           |
+| Recipe Planner     | x    | phuc tap  |        |           |       | x           |
