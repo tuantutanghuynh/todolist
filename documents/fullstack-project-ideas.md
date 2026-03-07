@@ -50,3 +50,20 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 
 ---
 ## Cap do 2 — Phuc tap hon (Auth, Relations)
+### 4. Blog / CMS
+
+**Mo ta:** Nen tang viet bai, binh luan, quan ly noi dung.
+
+**Tinh nang chinh:**
+- Dang ky / dang nhap nguoi dung
+- Viet bai, chinh sua, xoa bai
+- Comment, like
+- Tags, categories, search
+- Phan quyen: admin / author / reader
+
+**Ki nang moi hoc them:**
+- Authentication & Authorization (Laravel Sanctum / JWT)
+- Role-based access control
+- Relations nhieu bang (User, Post, Comment, Tag)
+
+---
