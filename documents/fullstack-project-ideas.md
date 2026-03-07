@@ -34,3 +34,18 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Date filtering phia backend
 
 ---
+### 3. Habit Tracker
+
+**Mo ta:** Tao va theo doi cac thoi quen hang ngay.
+
+**Tinh nang chinh:**
+- Tao habits, check-in hang ngay
+- Streak counting
+- Calendar / heatmap view
+- Thong ke tuan/thang
+
+**Ki nang moi hoc them:**
+- Date logic phuc tap hon
+- Heatmap UI (tuong tu GitHub contributions)
+
+---
