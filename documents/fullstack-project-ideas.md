@@ -82,3 +82,19 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Queue / job xu ly background (Laravel Queue)
 
 ---
+### 6. Budget Planner
+
+**Mo ta:** Quan ly nhieu vi/tai khoan, theo doi thu chi, bao cao tai chinh.
+
+**Tinh nang chinh:**
+- Nhieu accounts / wallets
+- Transactions (thu / chi)
+- Recurring payments (thu chi dinh ky)
+- Bao cao theo thang, quy
+
+**Ki nang moi hoc them:**
+- Complex DB relationships
+- Financial logic (so du, tinh tong theo period)
+- Scheduled tasks (Laravel Scheduler)
+
+---
