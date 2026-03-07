@@ -67,3 +67,18 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Relations nhieu bang (User, Post, Comment, Tag)
 
 ---
+### 5. Bookmark Manager
+
+**Mo ta:** Luu va quan ly cac duong dan (URL) yeu thich.
+
+**Tinh nang chinh:**
+- Luu URL, tu dong lay metadata (title, thumbnail, description)
+- Collections / folders, tags
+- Search full-text
+- Import / export
+
+**Ki nang moi hoc them:**
+- Goi external API tu backend (web scraping co ban)
+- Queue / job xu ly background (Laravel Queue)
+
+---
