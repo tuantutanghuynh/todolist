@@ -161,4 +161,6 @@ Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang m
 |--------------------|------|-----------|--------|-----------|-------|-------------|
 | Note Taking        |      | co ban    |        |           |       |             |
 | Expense Tracker    |      | co ban    | x      |           |       |             |
-| Habit Tracker      |      | co ban    | x      |           |       |             |
+| Habit Tracker      |      | co ban    | x      |           |       |             || Blog / CMS         | x    | trung binh|        |           |       |             |
+| Bookmark Manager   | x    | trung binh|        |           | x     |             |
+| Budget Planner     | x    | phuc tap  | x      |           | x     |             |
