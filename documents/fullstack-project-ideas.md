@@ -166,3 +166,6 @@ Moi buoc deu dung lai stack **Laravel + React** nhung bo sung them 1-2 ki nang m
 | Budget Planner     | x    | phuc tap  | x      |           | x     |             || Project Management | x    | phuc tap  |        | x         |       | x           |
 | Inventory Mgmt     | x    | phuc tap  | x      |           | x     | x           |
 | Recipe Planner     | x    | phuc tap  |        |           |       | x           |
+---
+
+*Happy coding! 🚀*
