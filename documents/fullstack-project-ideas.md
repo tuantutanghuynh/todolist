@@ -99,3 +99,20 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 
 ---
 ## Cap do 3 — Gan production-ready
+### 7. Project Management Tool (Trello mini)
+
+**Mo ta:** Quan ly cong viec theo dang kanban board.
+
+**Tinh nang chinh:**
+- Boards, columns, cards
+- Drag-and-drop sap xep card / column
+- Multi-user, assign tasks, due dates
+- Comments, attachments
+- Real-time cap nhat
+
+**Ki nang moi hoc them:**
+- Real-time voi WebSocket (Laravel Echo + Pusher)
+- Drag-and-drop (react-beautiful-dnd / dnd-kit)
+- Team collaboration
+
+---
