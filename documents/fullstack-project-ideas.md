@@ -116,3 +116,19 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Team collaboration
 
 ---
+### 8. Inventory Management
+
+**Mo ta:** Quan ly san pham, kho hang, nhap/xuat.
+
+**Tinh nang chinh:**
+- CRUD san pham, danh muc
+- Nhap / xuat kho, lich su giao dich
+- Low stock alerts
+- Bao cao ton kho, bieu do
+
+**Ki nang moi hoc them:**
+- Business logic phuc tap
+- Email notifications (Laravel Mail)
+- PDF export (DomPDF / Snappy)
+
+---
