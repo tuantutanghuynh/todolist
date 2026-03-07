@@ -19,3 +19,18 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Markdown rendering phia frontend
 
 ---
+### 2. Expense Tracker
+
+**Mo ta:** Theo doi chi tieu ca nhan theo ngay/thang/danh muc.
+
+**Tinh nang chinh:**
+- Them / xoa / sua chi tieu
+- Phan loai (an uong, di lai, hoa don...)
+- Bieu do thong ke theo thang
+- Filter theo khoang thoi gian
+
+**Ki nang moi hoc them:**
+- Data visualization (Chart.js / Recharts)
+- Date filtering phia backend
+
+---
