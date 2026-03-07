@@ -49,3 +49,4 @@ Danh sach cac du an fullstack co the tu lam, tang dan do phuc tap. Phu hop voi s
 - Heatmap UI (tuong tu GitHub contributions)
 
 ---
+## Cap do 2 — Phuc tap hon (Auth, Relations)
